@@ -26,4 +26,6 @@ public sealed class ReadersModel : EntityAbstract
     [NotNull]
     [Column("phone")]
     public string Phone { get; set; } = string.Empty;
+
+    public IssuanceModel? Issuance { get; set; }
 }

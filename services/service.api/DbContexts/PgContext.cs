@@ -14,9 +14,11 @@ public sealed class PgContext : DbContext
     public DbSet<CharactersModel> Characters { get; set; }
     public DbSet<EditionsModel> Editions { get; set; }
     public DbSet<CreatorsModel> Creators { get; set; }
+    public DbSet<CompilersModel> Compilers { get; set; }
 
     public PgContext(DbContextOptions<PgContext> options) : base(options)
     {
+        Database.EnsureDeleted();
         Database.EnsureCreated();
     }
 }

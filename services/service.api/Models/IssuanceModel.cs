@@ -17,4 +17,6 @@ public sealed class IssuanceModel : EntityAbstract
 
     [Column("date_of_return")]
     public DateTime DateOfReturn { get; set; }
+
+    public ICollection<ReadersModel>? Readers { get; set; }
 }

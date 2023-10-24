@@ -5,4 +5,4 @@ namespace Service.API.Models;
 
 [Table("compiler")]
 public sealed class CompilersModel : EntityAbstract 
-{}
+{ }
