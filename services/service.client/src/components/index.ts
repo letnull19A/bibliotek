@@ -1,2 +1,7 @@
 export { Header } from './component.header/Header'
 export { Button } from './component.button/Button'
+export { App } from './component.app/App'
+export { Menu } from './component.menu'
+export { Content } from './component.content'
+export { Footer } from './component.footer'
+export { Container } from './component.container'

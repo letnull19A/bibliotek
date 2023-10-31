@@ -1,0 +1,1 @@
+export type Children = string | JSX.Element | Array<JSX.Element> | null

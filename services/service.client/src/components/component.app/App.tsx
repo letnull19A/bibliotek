@@ -1,18 +1,40 @@
-import { Header } from '..'
-import { OneForm } from '../../layouts'
+import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 import style from './App.module.scss'
+import { Books, Login, Registration } from '../../pages'
+import { Account } from '../../pages/page.account'
 
-function App() {
+export const App = () => {
 
-  return (
-    <div className={style.app}>
-      <OneForm 
-        header={<Header className=''/>} 
-        menu={null} 
-        content={null} 
-        footer={null}/>
-    </div>
-  )
+	const router = createBrowserRouter([
+		{
+			path: "/main",
+			element: <>Титульная страница</>
+		},
+		{
+			path: "/",
+			element: <>Титульная страница</>
+		},
+		{
+			path: "/login",
+			element: <Login/>
+		},
+		{
+			path: '/registration',
+			element: <Registration/>
+		},
+		{
+			path: '/account',
+			element: <Account/>
+		},
+		{
+			path: '/books',
+			element: <Books/>
+		}
+	])
+
+	return (
+		<div className={style.app}>
+			<RouterProvider router={router} />
+		</div>
+	)
 }
-
-export default App

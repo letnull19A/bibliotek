@@ -1,22 +1,46 @@
+import { isValidElement } from 'react'
+import { Children } from '../../types'
 import style from './OneForm.module.scss'
+import { Content, Footer, Header } from '../../components'
 
 type OneFormProps = {
-    header: JSX.Element | null,
-    content: JSX.Element | null,
-    footer: JSX.Element | null
+    children: Array<Children>
 }
 
 export const OneForm = (props: OneFormProps) => {
+
+    let headerElement: Children = <></>
+    let contentElement: Children = <></>
+    let footerElement: Children = <></>
+
+    props.children.forEach((child) => {
+        if (isValidElement(child) && typeof child?.type === 'function') {
+          switch (child.type.name) {
+            case Header.name:
+              headerElement = child
+              break
+            case Content.name:
+              contentElement = child
+              break
+            case Footer.name:
+              footerElement = child
+              break
+            default:
+              break
+          }
+        }
+      })
+
     return (
         <div className={style.one_form}>
             <div className={style.one_form_header}>
-                {props.header}
+                {headerElement}
             </div>
             <div className={style.one_form_content}>
-                {props.content}
+                {contentElement}
             </div>
             <div className={style.one_form_footer}>
-                {props.footer}
+                {footerElement}
             </div>
         </div>
     )
