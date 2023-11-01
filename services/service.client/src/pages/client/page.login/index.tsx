@@ -2,7 +2,7 @@ import { Form, Input, Checkbox, Button, Layout } from 'antd'
 import style from './style.module.scss'
 
 export const Login = () => {
-	const { Header, Footer, Content } = Layout
+	const { Header, Content } = Layout
 
 	const onFinish = (values: any) => {
 		console.log('Success:', values)
@@ -53,13 +53,12 @@ export const Login = () => {
 					</Form.Item>
 
 					<Form.Item>
-						<Button type="primary" htmlType="submit">
+						<Button style={{ width: '100%', height: '48px' }} type="primary" htmlType="submit">
 							Войти
 						</Button>
 					</Form.Item>
 				</Form>
 			</Content>
-			<Footer className={style.footer}></Footer>
 		</Layout>
 	)
 }

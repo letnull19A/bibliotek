@@ -1,3 +1,4 @@
-export { Login } from './page.login'
-export { Registration } from './page.registration'
-export { Books } from './page.books'
+export { Login } from './client/page.login'
+export { Registration } from './admin/page.registration'
+export { Books } from './client/page.books'
+export { AddBook } from './admin/page.add-book'

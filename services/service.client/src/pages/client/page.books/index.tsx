@@ -1,15 +1,9 @@
-import { Layout, Button, theme, Card, Menu, Typography } from 'antd'
-import { useTitle } from '../../hooks'
+import { Layout, Button, theme, Card, Typography } from 'antd'
+import { useTitle } from '../../../hooks'
 import style from './style.module.scss'
 import { useState } from 'react'
-import {
-	MenuFoldOutlined,
-	MenuUnfoldOutlined,
-	UploadOutlined,
-	UserOutlined,
-	VideoCameraOutlined
-} from '@ant-design/icons'
-import { useNavigate } from 'react-router-dom'
+import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons'
+import { ReadyMenu } from '../../../widgets'
 
 export const Books = () => {
 	const { Header, Sider, Content } = Layout
@@ -25,39 +19,11 @@ export const Books = () => {
 
 	const { Title } = Typography
 
-	const navigate = useNavigate()
-
-	const navigateTo = (e: any) => {
-		navigate(`/${e.key}`)
-	}
-
 	return (
 		<Layout>
 			<Sider trigger={null} collapsible collapsed={collapsed}>
 				<div className="demo-logo-vertical" />
-				<Menu
-					onClick={(e) => navigateTo(e)}
-					theme="dark"
-					mode="inline"
-					defaultSelectedKeys={['1']}
-					items={[
-						{
-							key: '/main',
-							icon: <UserOutlined />,
-							label: 'Главная'
-						},
-						{
-							key: 'books',
-							icon: <VideoCameraOutlined />,
-							label: 'Книги'
-						},
-						{
-							key: 'account',
-							icon: <UploadOutlined />,
-							label: 'Аккаунт'
-						}
-					]}
-				/>
+				<ReadyMenu />
 			</Sider>
 			<Layout>
 				<Header style={{ padding: 0, background: colorBgContainer }}>

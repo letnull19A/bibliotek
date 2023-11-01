@@ -1,0 +1,21 @@
+@import './../../../styles/scss/style.layout.scss';
+
+$cards-per-row: 5;
+$mini-cards-per-row: 6;
+$gap: 20px;
+
+.big_cards_block {
+	gap: $gap;
+
+	&_content {
+		width: calc(100% / $cards-per-row - $gap);
+	}
+}
+
+.mini_cards_block {
+	gap: $gap;
+
+	&_content {
+		width: calc(100% / $mini-cards-per-row - $gap);
+	}
+}

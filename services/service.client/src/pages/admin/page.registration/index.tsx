@@ -1,8 +1,9 @@
-import { Form, Input, Checkbox, Button, Layout } from 'antd'
+import { Form, Input, Button, Layout, Select, Space } from 'antd'
 import style from './style.module.scss'
+import { KeyOutlined } from '@ant-design/icons'
 
 export const Registration = () => {
-    const { Header, Footer, Content } = Layout
+	const { Header, Content } = Layout
 
 	const onFinish = (values: any) => {
 		console.log('Success:', values)
@@ -13,12 +14,15 @@ export const Registration = () => {
 	}
 
 	type FieldType = {
-        login: string
-        name: string
-        surname: string
+		login: string
+		name: string
+		surname: string
 		fatherName: string
 		password: string
 	}
+
+	const filterOption = (input: string, option?: { label: string; value: string }) =>
+		(option?.label ?? '').toLowerCase().includes(input.toLowerCase())
 
 	return (
 		<Layout>
@@ -41,24 +45,24 @@ export const Registration = () => {
 						<Input />
 					</Form.Item>
 
-                    <Form.Item<FieldType>
-						label="Ваше имя"
+					<Form.Item<FieldType>
+						label="Имя"
 						name="name"
 						rules={[{ required: true, message: 'Please input your username!' }]}
 					>
 						<Input />
 					</Form.Item>
 
-                    <Form.Item<FieldType>
-						label="Ваша фамилия"
+					<Form.Item<FieldType>
+						label="Фамилия"
 						name="surname"
 						rules={[{ required: true, message: 'Please input your username!' }]}
 					>
 						<Input />
 					</Form.Item>
 
-                    <Form.Item<FieldType>
-						label="Ваше отчество (при наличии)"
+					<Form.Item<FieldType>
+						label="Отчество (при наличии)"
 						name="fatherName"
 						rules={[{ required: false, message: 'Please input your username!' }]}
 					>
@@ -66,29 +70,72 @@ export const Registration = () => {
 					</Form.Item>
 
 					<Form.Item<FieldType>
+						label="Номер группы"
+						// name="name"
+						rules={[{ required: true, message: 'Please input your username!' }]}
+					>
+						<Select
+							showSearch
+							placeholder="Select a person"
+							optionFilterProp="children"
+							filterOption={filterOption}
+							options={[
+								{
+									value: '0',
+									label: '121'
+								},
+								{
+									value: '1',
+									label: '122'
+								},
+								{
+									value: '2',
+									label: '131'
+								},
+								{
+									value: '3',
+									label: '132'
+								},
+								{
+									value: '4',
+									label: '141'
+								},
+								{
+									value: '5',
+									label: '142'
+								}
+							]}
+						/>
+					</Form.Item>
+
+					<Form.Item<FieldType>
 						label="Пароль"
 						name="password"
 						rules={[{ required: true, message: 'Please input your password!' }]}
 					>
-						<Input.Password />
+						<Space.Compact style={{ width: '100%' }}>
+							<Input />
+							<Button type="primary">
+								<KeyOutlined />
+							</Button>
+						</Space.Compact>
 					</Form.Item>
 
-                    <Form.Item<FieldType>
+					<Form.Item<FieldType>
 						label="Подтверждение пароля"
 						name="password"
 						rules={[{ required: true, message: 'Please input your password!' }]}
 					>
-						<Input.Password />
+						<Input />
 					</Form.Item>
 
 					<Form.Item>
-						<Button type="primary" htmlType="submit">
-							Войти
+						<Button style={{ width: '100%', height: '48px' }} type="primary" htmlType="submit">
+							Зарегистрировать
 						</Button>
 					</Form.Item>
 				</Form>
 			</Content>
-			<Footer className={style.footer}></Footer>
 		</Layout>
 	)
 }
