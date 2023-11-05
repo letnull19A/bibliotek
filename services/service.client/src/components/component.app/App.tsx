@@ -26,6 +26,10 @@ export const App = () => {
 			element: <Books />
 		},
 		{
+			path: '/books/add',
+			element: <AddBook/>
+		},
+		{
 			path: 'worker/users/add',
 			element: <Registration />
 		},

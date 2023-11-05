@@ -1,37 +1,25 @@
 import express from 'express'
-import { PgClient } from '../../db/index.js'
+import { PgClient } from '../../db/db.postgres.js'
 
-export const booksRoute = express.Router()
+export const publisherRoute = express.Router()
 
 /**
  * @openapi
- * /api/books:
+ * /api/issue:
  *  get:
  *     tags:
- *     - Books
+ *     - Publisher
  *     description: Responds if the app is up and running
  *     responses:
  *       200:
  *         description: App is up and running
  */
-booksRoute.get('', (req, res) => {
+publisherRoute.get('', (req, res) => {
 	const p = PgClient()
 
 	p.connect()
 
-	p.query('SELECT \
-			books.id, \
-			books.title, \
-			books.cover, \
-			books.genre, \
-			books.year_of_publishing, \
-			authors.name as author_name, \
-			authors.surname as author_surname, \
-			authors.father_name as author_father_name, \
-			publishers.name as publisher_name \
-			FROM books \
-			INNER JOIN authors ON authors.id = author_id \
-			INNER JOIN publishers ON publisher_id = publishers.id')
+	p.query('SELECT * FROM publishers')
 		.then((result) => {
 			p.end()
 			res.status(200).send(result.rows)
@@ -41,126 +29,119 @@ booksRoute.get('', (req, res) => {
 			res.status(500).send()
 		})
 })
-
 /**
  * @openapi
- * /api/books:
+ * /api/issue:
  *  get:
  *     tags:
- *     - Books
+ *     - Publisher
  *     description: Responds if the app is up and running
  *     responses:
  *       200:
  *         description: App is up and running
  */
-booksRoute.get('/:id', (req, res) => {
-	const p = PgClient()
+publisherRoute.get('/:id', (req, res) => {
 	const { id } = req.params
 
+	const p = PgClient()
+
 	p.connect()
 
-	p.query('SELECT * FROM books WHERE id = $1', [id])
+	p.query('SELECT * FROM publishers WHERE id=$1', [id])
 		.then((result) => {
 			p.end()
 			res.status(200).send(result.rows)
 		})
 		.catch((err) => {
 			console.error(err)
-			p.end()
 			res.status(500).send()
 		})
 })
 
 /**
  * @openapi
- * /api/books:
+ * /api/publisher:
  *  post:
  *     tags:
- *     - Books
+ *     - Publisher
  *     description: Responds if the app is up and running
  *     responses:
  *       200:
  *         description: App is up and running
  */
-booksRoute.post('', (req, res) => {
-	const { author_id, publisher_id, title, cover, year_of_publishing } = req.body
+publisherRoute.post('', (req, res) => {
+	const { name } = req.body
 
 	const p = PgClient()
 
 	p.connect()
 
-	p.query('INSERT INTO books \
-			(author_id, publisher_id, title, cover, year_of_publishing) \
-			VALUES ($1, $2, $3, $4, $5)', 
-			[author_id, publisher_id, title, cover, year_of_publishing])
+	p.query('INSERT INTO publishers (name) VALUES ($1)', [name])
 		.then((result) => {
 			p.end()
 			res.status(200).send(result.rows)
 		})
 		.catch((err) => {
 			console.error(err)
-			p.end()
 			res.status(500).send()
 		})
 })
 
 /**
  * @openapi
- * /api/books:
+ * /api/publisher:
  *  put:
  *     tags:
- *     - Books
+ *     - Publisher
  *     description: Responds if the app is up and running
  *     responses:
  *       200:
  *         description: App is up and running
  */
-booksRoute.put('/:id', (req, res) => {
+publisherRoute.put('/:id', (req, res) => {
 	const { id } = req.params
-	const { name, surname, fatherName } = req.body
+	const { name } = req.body
 
 	const p = PgClient()
 
 	p.connect()
 
-	p.query('UPDATE authors SET name=$2, surname=$3, father_name=$4 WHERE id=$1', [id, name, surname, fatherName])
+	p.query('UPDATE publishers SET name=$2 WHERE id=$1', [id, name])
 		.then((result) => {
 			p.end()
 			res.status(200).send(result.rows)
 		})
 		.catch((err) => {
 			console.error(err)
-			p.end()
 			res.status(500).send()
 		})
 })
 
 /**
  * @openapi
- * /api/books:
+ * /api/publisher:
  *  delete:
  *     tags:
- *     - Books
+ *     - Publisher
  *     description: Responds if the app is up and running
  *     responses:
  *       200:
  *         description: App is up and running
  */
-booksRoute.delete('/:id', (req, res) => {
+publisherRoute.delete('/:id', (req, res) => {
 	const { id } = req.params
 
 	const p = PgClient()
 
 	p.connect()
 
-	p.query('DELETE FROM authors WHERE id=$1', [id])
+	p.query('DELETE FROM publishers WHERE id=$1', [id])
 		.then((result) => {
 			p.end()
 			res.status(200).send(result.rows)
 		})
 		.catch((err) => {
 			console.error(err)
-			p.end()
 			res.status(500).send()
 		})
 })

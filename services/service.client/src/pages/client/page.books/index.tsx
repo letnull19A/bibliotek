@@ -1,9 +1,21 @@
 import { Layout, Button, theme, Card, Typography } from 'antd'
 import { useTitle } from '../../../hooks'
 import style from './style.module.scss'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons'
 import { ReadyMenu } from '../../../widgets'
+
+type Book = {
+	id: string
+	title: string
+	cover: string
+	genre: string
+	publisher_name: string
+	author_name: string
+	author_surname: string
+	author_father_name: string
+	year_of_publishing: number
+}
 
 export const Books = () => {
 	const { Header, Sider, Content } = Layout
@@ -18,6 +30,19 @@ export const Books = () => {
 	const { title } = useTitle('Список книг????')
 
 	const { Title } = Typography
+
+	const [books, setBooks] = useState<Array<Book>>()
+
+	useEffect(() => {
+		var requestOptions = {
+			method: 'GET',
+			redirect: 'follow'
+		}
+
+		fetch('http://localhost:3000/api/books', requestOptions)
+			.then(async (response) => setBooks(await response.json() as Array<Book>))
+			.catch((error) => console.log('error', error))
+	}, [])
 
 	return (
 		<Layout>
@@ -48,17 +73,19 @@ export const Books = () => {
 					}}
 				>
 					<Title>Список книг</Title>
-					<Card
-						cover={
-							<img src="https://www.onthebus.com.ua/wa-data/public/shop/products/79/63/6379/images/20421/20421.750x0.jpg" />
-						}
-						title="О Дивный новый мир"
-						style={{ width: 300 }}
-					>
-						<p>Автор: Олдос Хаксли</p>
-						<p>Жанр: Антиутопия</p>
-						<p>Card content</p>
-					</Card>
+					{books !== undefined && Array.isArray(books) && books.map((book) => (
+						<Card
+							cover={
+								<img src={book.cover} />
+							}
+							title={book.title}
+							style={{ width: 300 }}
+						>
+							<p>Автор: {`${book.author_name} ${book.author_father_name} ${book.author_surname}`}</p>
+							<p>Жанр: {book.genre}</p>
+							<p>Издание: {book.publisher_name}</p>
+						</Card>
+					))}
 					<Title>История</Title>
 					<Card
 						cover={<img src="https://th.bing.com/th/id/OIP.T7sPgN_OXadgOumEkY2tgAHaLl?pid=ImgDet&rs=1" />}

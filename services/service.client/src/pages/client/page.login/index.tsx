@@ -1,21 +1,40 @@
 import { Form, Input, Checkbox, Button, Layout } from 'antd'
 import style from './style.module.scss'
+import { SERVER_HOST } from '../../../configs'
+import { useState } from 'react'
 
 export const Login = () => {
 	const { Header, Content } = Layout
-
-	const onFinish = (values: any) => {
-		console.log('Success:', values)
-	}
 
 	const onFinishFailed = (errorInfo: any) => {
 		console.log('Failed:', errorInfo)
 	}
 
 	type FieldType = {
-		username?: string
+		login?: string
 		password?: string
-		remember?: string
+	}
+
+	const sendLoginRequest = async (values: any) => {
+
+		var myHeaders = new Headers()
+		myHeaders.append('Content-Type', 'application/x-www-form-urlencoded')
+
+		var urlencoded = new URLSearchParams()
+		urlencoded.append('login', values.login)
+		urlencoded.append('password', values.password)
+
+		var requestOptions = {
+			method: 'POST',
+			headers: myHeaders,
+			body: urlencoded,
+			redirect: 'follow'
+		}
+
+		fetch('http://localhost:3000/api/autherization', requestOptions)
+			.then((response) => response.text())
+			.then((result) => console.log(result))
+			.catch((error) => console.log('error', error))
 	}
 
 	return (
@@ -24,36 +43,33 @@ export const Login = () => {
 			<Content className={style.content}>
 				<Form
 					name="basic"
+					onFinish={sendLoginRequest}
 					style={{ maxWidth: 300 }}
 					initialValues={{ remember: false }}
-					onFinish={onFinish}
 					onFinishFailed={onFinishFailed}
 					autoComplete="off"
 					layout="vertical"
 					className={style.form}
 				>
-					<Form.Item<FieldType>
-						label="Логин"
-						name="username"
-						rules={[{ required: true, message: 'Please input your username!' }]}
-					>
+					<Form.Item<FieldType> label="Логин" name="login" rules={[{ required: true, message: 'Логин не введён!' }]}>
 						<Input />
 					</Form.Item>
 
 					<Form.Item<FieldType>
 						label="Пароль"
 						name="password"
-						rules={[{ required: true, message: 'Please input your password!' }]}
+						rules={[{ required: true, message: 'Пароль не введён!' }]}
 					>
 						<Input.Password />
 					</Form.Item>
 
-					<Form.Item<FieldType> name="remember" valuePropName="checked">
-						<Checkbox checked={false}>Запомнить меня</Checkbox>
-					</Form.Item>
-
 					<Form.Item>
-						<Button style={{ width: '100%', height: '48px' }} type="primary" htmlType="submit">
+						<Button
+							onClick={() => sendLoginRequest()}
+							style={{ width: '100%', height: '48px' }}
+							type="primary"
+							htmlType="submit"
+						>
 							Войти
 						</Button>
 					</Form.Item>

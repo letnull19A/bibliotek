@@ -1,65 +1,55 @@
 import express from 'express'
-import { PgClient } from '../../db/index.js'
+import { PgClient } from '../../db/db.postgres.js'
 
-export const booksRoute = express.Router()
+export const authorRoute = express.Router()
 
 /**
  * @openapi
- * /api/books:
+ * /api/author:
  *  get:
  *     tags:
- *     - Books
+ *     - Authors
  *     description: Responds if the app is up and running
  *     responses:
  *       200:
  *         description: App is up and running
  */
-booksRoute.get('', (req, res) => {
+authorRoute.get('/', (_, res) => {
 	const p = PgClient()
 
 	p.connect()
 
-	p.query('SELECT \
-			books.id, \
-			books.title, \
-			books.cover, \
-			books.genre, \
-			books.year_of_publishing, \
-			authors.name as author_name, \
-			authors.surname as author_surname, \
-			authors.father_name as author_father_name, \
-			publishers.name as publisher_name \
-			FROM books \
-			INNER JOIN authors ON authors.id = author_id \
-			INNER JOIN publishers ON publisher_id = publishers.id')
+	p.query('SELECT * FROM authors')
 		.then((result) => {
 			p.end()
 			res.status(200).send(result.rows)
 		})
 		.catch((err) => {
 			console.error(err)
+			p.end()
 			res.status(500).send()
 		})
 })
 
 /**
  * @openapi
- * /api/books:
+ * /api/author/:id:
  *  get:
  *     tags:
- *     - Books
+ *     - Authors
  *     description: Responds if the app is up and running
  *     responses:
  *       200:
  *         description: App is up and running
  */
-booksRoute.get('/:id', (req, res) => {
-	const p = PgClient()
+authorRoute.get('/:id', (req, res) => {
 	const { id } = req.params
 
+	const p = PgClient()
+
 	p.connect()
 
-	p.query('SELECT * FROM books WHERE id = $1', [id])
+	p.query('SELECT * FROM authors WHERE id=$1', [id])
 		.then((result) => {
 			p.end()
 			res.status(200).send(result.rows)
@@ -73,26 +63,26 @@ booksRoute.get('/:id', (req, res) => {
 
 /**
  * @openapi
- * /api/books:
+ * /api/author/:id:
  *  post:
  *     tags:
- *     - Books
+ *     - Authors
  *     description: Responds if the app is up and running
  *     responses:
  *       200:
  *         description: App is up and running
  */
-booksRoute.post('', (req, res) => {
-	const { author_id, publisher_id, title, cover, year_of_publishing } = req.body
+authorRoute.post('', (req, res) => {
+	const { name, surname, fatherName, country_id } = req.body
 
 	const p = PgClient()
 
 	p.connect()
 
-	p.query('INSERT INTO books \
-			(author_id, publisher_id, title, cover, year_of_publishing) \
-			VALUES ($1, $2, $3, $4, $5)', 
-			[author_id, publisher_id, title, cover, year_of_publishing])
+	p.query('INSERT INTO authors \
+	 		(name, surname, father_name, country_id) VALUES \
+			($1, $2, $3, $4)', 
+			[name, surname, fatherName, country_id])
 		.then((result) => {
 			p.end()
 			res.status(200).send(result.rows)
@@ -106,16 +96,16 @@ booksRoute.post('', (req, res) => {
 
 /**
  * @openapi
- * /api/books:
+ * /api/author/:id:
  *  put:
  *     tags:
- *     - Books
+ *     - Authors
  *     description: Responds if the app is up and running
  *     responses:
  *       200:
  *         description: App is up and running
  */
-booksRoute.put('/:id', (req, res) => {
+authorRoute.put('/:id', (req, res) => {
 	const { id } = req.params
 	const { name, surname, fatherName } = req.body
 
@@ -137,16 +127,16 @@ booksRoute.put('/:id', (req, res) => {
 
 /**
  * @openapi
- * /api/books:
+ * /api/author/:id:
  *  delete:
  *     tags:
- *     - Books
+ *     - Authors
  *     description: Responds if the app is up and running
  *     responses:
  *       200:
  *         description: App is up and running
  */
-booksRoute.delete('/:id', (req, res) => {
+authorRoute.delete('/:id', (req, res) => {
 	const { id } = req.params
 
 	const p = PgClient()

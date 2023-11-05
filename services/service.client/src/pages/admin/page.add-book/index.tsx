@@ -13,11 +13,12 @@ export const AddBook = () => {
 	}
 
 	type FieldType = {
-		login: string
 		name: string
-		surname: string
-		fatherName: string
-		password: string
+		author: string
+		description: string
+		publisher: string
+		year_of_publishing: number
+		cover: string
 	}
 
 	const filterOption = (input: string, option?: { label: string; value: string }) =>
@@ -46,16 +47,16 @@ export const AddBook = () => {
 				>
 					<Form.Item<FieldType>
 						label="Название произведения"
-						name="login"
-						rules={[{ required: true, message: 'Please input your username!' }]}
+						name="name"
+						rules={[{ required: true, message: 'Введите название произведения!' }]}
 					>
 						<Input />
 					</Form.Item>
 
 					<Form.Item<FieldType>
 						label="Автор"
-						name="name"
-						rules={[{ required: true, message: 'Please input your username!' }]}
+						name="author"
+						rules={[{ required: true, message: 'Введите автора!' }]}
 					>
 						<Select
 							showSearch
@@ -87,7 +88,7 @@ export const AddBook = () => {
 
 					<Form.Item<FieldType>
 						label="Издательство"
-						name="name"
+						name="publisher"
 						rules={[{ required: true, message: 'Please input your username!' }]}
 					>
 						<Select
@@ -115,20 +116,34 @@ export const AddBook = () => {
 					</Form.Item>
 
 					<Form.Item<FieldType>
+						label="Год издания"
+						name="year_of_publishing"
+						rules={[{ required: false, message: 'Please input your username!' }]}
+					>
+						<Input />
+					</Form.Item>
+
+					<Form.Item<FieldType>
+						label="Изображение"
+						name="cover"
+						rules={[{ required: false, message: 'Please input your username!' }]}
+					>
+						<Input addonBefore="http://" />
+					</Form.Item>
+
+					<Form.Item<FieldType>
 						label="Описание"
-						name="fatherName"
+						name="description"
 						rules={[{ required: false, message: 'Please input your username!' }]}
 					>
 						<Input.TextArea rows={10} />
 					</Form.Item>
 
+
 					<Form.Item>
 						<Flex justify="space-between">
 							<Button type="primary" htmlType="submit">
 								Применить
-							</Button>
-							<Button type="default" htmlType="submit">
-								Очистить
 							</Button>
 						</Flex>
 					</Form.Item>
