@@ -14,6 +14,17 @@ export const booksRoute = express.Router()
  *       200:
  *         description: App is up and running
  */
+/**
+ * @openapi
+ * /api/books:
+ *  get:
+ *     tags:
+ *     - Books
+ *     description: Responds if the app is up and running
+ *     responses:
+ *       200:
+ *         description: App is up and running
+ */
 booksRoute.get('', (req, res) => {
 	const p = PgClient()
 

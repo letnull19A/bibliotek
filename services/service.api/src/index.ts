@@ -29,6 +29,8 @@ const main = async () => {
 
 	checkPostgresConnection()
 
+	checkPostgresConnection()
+
 	const port = process.env.APP_PORT | 3000
 
 	const app = express()
