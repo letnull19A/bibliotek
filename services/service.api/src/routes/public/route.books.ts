@@ -1,5 +1,6 @@
 import express from 'express'
 import { PgClient } from '../../db/index.js'
+import { log } from 'console'
 
 export const booksRoute = express.Router()
 
@@ -31,7 +32,7 @@ booksRoute.get('', (req, res) => {
 	p.connect()
 
 	p.query('SELECT \
-			books.id, \
+			books.id as book_id, \
 			books.title, \
 			books.cover, \
 			books.genre, \
@@ -70,10 +71,25 @@ booksRoute.get('/:id', (req, res) => {
 
 	p.connect()
 
-	p.query('SELECT * FROM books WHERE id = $1', [id])
+	p.query('SELECT \
+				books.id as book_id,\
+				books.title, \
+				books.year_of_publishing, \
+				books.genre, \
+				books.author_id as author_id, \
+				books.publisher_id as publisher_id, \
+				books.cover, \
+				publishers.name, \
+				CONCAT(authors.name, \' \', \
+				authors.surname, \' \', \
+				authors.father_name) as author \
+			 FROM books \
+			 INNER JOIN authors ON authors.id = author_id \
+			 INNER JOIN publishers ON publishers.id = publisher_id \
+			 WHERE books.id = $1', [id])
 		.then((result) => {
 			p.end()
-			res.status(200).send(result.rows)
+			res.status(200).send(result.rows[0])
 		})
 		.catch((err) => {
 			console.error(err)
@@ -128,13 +144,20 @@ booksRoute.post('', (req, res) => {
  */
 booksRoute.put('/:id', (req, res) => {
 	const { id } = req.params
-	const { name, surname, fatherName } = req.body
+	log(req.body)
+	const { title, author_id, year_of_publishing, publisher_id, cover } = req.body
 
 	const p = PgClient()
 
 	p.connect()
 
-	p.query('UPDATE authors SET name=$2, surname=$3, father_name=$4 WHERE id=$1', [id, name, surname, fatherName])
+	p.query('UPDATE books SET \
+			title=$2, \
+			author_id=$3, \
+			year_of_publishing=$4, \
+			publisher_id=$5, \
+			cover=$6 \
+			WHERE id=$1', [id, title, author_id, year_of_publishing, publisher_id, cover])
 		.then((result) => {
 			p.end()
 			res.status(200).send(result.rows)
@@ -162,9 +185,11 @@ booksRoute.delete('/:id', (req, res) => {
 
 	const p = PgClient()
 
+	log(id)
+
 	p.connect()
 
-	p.query('DELETE FROM authors WHERE id=$1', [id])
+	p.query('DELETE FROM books WHERE id=$1', [id])
 		.then((result) => {
 			p.end()
 			res.status(200).send(result.rows)

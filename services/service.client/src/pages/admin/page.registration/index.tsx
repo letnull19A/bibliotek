@@ -1,9 +1,29 @@
-import { Form, Input, Button, Layout, Select, Space } from 'antd'
+import { Form, Input, Button, Layout, Select } from 'antd'
 import style from './style.module.scss'
-import { KeyOutlined } from '@ant-design/icons'
+import { useEffect, useState } from 'react'
+
+type FieldType = {
+	login: string
+	name: string
+	surname: string
+	fatherName: string
+	group: number
+	password: string
+}
+
+type Group = {
+	id: string
+	number: number
+}
 
 export const Registration = () => {
 	const { Header, Content } = Layout
+
+	const [groups, setGroups] = useState<Array<Group>>()
+
+	useEffect(() => {
+		getGroups()
+	}, [])
 
 	const onFinish = (values: any) => {
 		console.log('Success:', values)
@@ -13,12 +33,41 @@ export const Registration = () => {
 		console.log('Failed:', errorInfo)
 	}
 
-	type FieldType = {
-		login: string
-		name: string
-		surname: string
-		fatherName: string
-		password: string
+	const handleRegistration = () => {
+		const myHeaders = new Headers()
+		myHeaders.append('Content-Type', 'application/x-www-form-urlencoded')
+
+		const urlencoded = new URLSearchParams()
+		urlencoded.append('name', 'Денис')
+		urlencoded.append('surname', 'Мясников')
+		urlencoded.append('father_name', 'Сергеевич')
+		urlencoded.append('login', 'bebes')
+		urlencoded.append('password', '11111111')
+		urlencoded.append('role', 'student')
+
+		const requestOptions = {
+			method: 'POST',
+			headers: myHeaders,
+			body: urlencoded,
+			redirect: 'follow'
+		}
+
+		fetch('http://localhost:3000/api/registration', requestOptions)
+			.then((response) => response.text())
+			.then((result) => console.log(result))
+			.catch((error) => console.log('error', error))
+	}
+
+	const getGroups = () => {
+		const requestOptions = {
+			method: 'GET',
+			redirect: 'follow'
+		}
+
+		fetch('http://localhost:3000/api/groups', requestOptions)
+			.then(async (response) => setGroups(await response.json()))
+			.then((result) => console.log(result))
+			.catch((error) => console.log('error', error))
 	}
 
 	const filterOption = (input: string, option?: { label: string; value: string }) =>
@@ -71,58 +120,24 @@ export const Registration = () => {
 
 					<Form.Item<FieldType>
 						label="Номер группы"
-						// name="name"
 						rules={[{ required: true, message: 'Please input your username!' }]}
 					>
-						<Select
-							showSearch
-							placeholder="Select a person"
-							optionFilterProp="children"
-							filterOption={filterOption}
-							options={[
-								{
-									value: '0',
-									label: '121'
-								},
-								{
-									value: '1',
-									label: '122'
-								},
-								{
-									value: '2',
-									label: '131'
-								},
-								{
-									value: '3',
-									label: '132'
-								},
-								{
-									value: '4',
-									label: '141'
-								},
-								{
-									value: '5',
-									label: '142'
-								}
-							]}
-						/>
+						{groups && (
+							<Select
+								showSearch
+								placeholder="Select a person"
+								optionFilterProp="children"
+								filterOption={filterOption}
+								options={groups?.map((group) => ({
+									value: group.id,
+									label: group.number
+								}))}
+							/>
+						)}
 					</Form.Item>
 
 					<Form.Item<FieldType>
 						label="Пароль"
-						name="password"
-						rules={[{ required: true, message: 'Please input your password!' }]}
-					>
-						<Space.Compact style={{ width: '100%' }}>
-							<Input />
-							<Button type="primary">
-								<KeyOutlined />
-							</Button>
-						</Space.Compact>
-					</Form.Item>
-
-					<Form.Item<FieldType>
-						label="Подтверждение пароля"
 						name="password"
 						rules={[{ required: true, message: 'Please input your password!' }]}
 					>

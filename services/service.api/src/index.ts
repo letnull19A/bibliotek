@@ -6,6 +6,11 @@ import swaggerJSDoc from 'swagger-jsdoc'
 import pg from 'pg'
 import bodyParser from 'body-parser'
 import cors from 'cors'
+import multer from 'multer'
+import fs from 'fs'
+import path from 'path'
+import { fileURLToPath } from 'url'
+import { imagesRoute } from './routes/public/route.images.js'
 
 const { Client } = pg
 
@@ -61,16 +66,30 @@ const main = async () => {
 		apis: ['**/*.ts']
 	}
 
+	const storageConfig = multer.diskStorage({
+    	destination: (req, file, cb) => {
+        	cb(null, 'uploads')
+    	},
+    	filename: (req, file, cb) => {
+        	cb(null, file.originalname)
+    	}
+	})
+
 	const swaggerSpec = swaggerJSDoc(options)
 
 	app.use(cors())
 	app.use(bodyParser.urlencoded({ extended: false }))
 	app.use(express.json())
 
+	app.use(express.static(path.dirname(fileURLToPath(import.meta.url))));
+	app.use(multer({storage:storageConfig}).any());
+
 	app.use('/api-docs', swaggerUi.serve)
 	app.get('/api-docs', swaggerUi.setup(swaggerSpec))
 
 	app.use('/api', apiRoute)
+
+	app.use('/uploads', imagesRoute)
 
 	app.listen(port, () => {
 		console.log(`*** Server run on port: ${port}`)

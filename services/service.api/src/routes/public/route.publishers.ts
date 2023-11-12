@@ -50,7 +50,7 @@ publisherRoute.get('/:id', (req, res) => {
 	p.query('SELECT * FROM publishers WHERE id=$1', [id])
 		.then((result) => {
 			p.end()
-			res.status(200).send(result.rows)
+			res.status(200).send(result.rows[0])
 		})
 		.catch((err) => {
 			console.error(err)

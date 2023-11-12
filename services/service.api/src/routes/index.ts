@@ -10,6 +10,8 @@ import { countriesRoute } from './public/route.countries.js'
 import { usersRoute } from './public/route.users.js'
 import { groupsAssociationRoute } from './public/route.groups-associations.js'
 import { booksAssociationRoute } from './public/route.user-books.js'
+import { uploadCoverRoute } from './public/route.upload-cover.js'
+import { searchEngineRoute } from './public/route.search-engine.js'
 
 export const apiRoute = express.Router()
 
@@ -24,3 +26,5 @@ apiRoute.use('/groups', groupsAssociationRoute)
 apiRoute.use('/countries', countriesRoute)
 apiRoute.use('/users', usersRoute)
 apiRoute.use('/users', booksAssociationRoute)
+apiRoute.use('/uploads/cover', uploadCoverRoute)
+apiRoute.use('/search', searchEngineRoute)

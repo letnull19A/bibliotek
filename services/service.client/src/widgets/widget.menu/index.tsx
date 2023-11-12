@@ -30,6 +30,26 @@ export const ReadyMenu = () => {
 					key: 'books',
 					icon: <BookOutlined />,
 					label: 'Книги'
+				},
+				{
+					key: 'authors',
+					icon: <BookOutlined />,
+					label: 'Авторы'
+				},
+				{
+					key: 'publishers',
+					icon: <BookOutlined />,
+					label: 'Издательства'
+				},
+				{
+					key: 'users',
+					icon: <BookOutlined />,
+					label: 'Пользователи'
+				},
+				{
+					key: 'groups',
+					icon: <BookOutlined />,
+					label: 'Группы'
 				}
 			]}
 		/>

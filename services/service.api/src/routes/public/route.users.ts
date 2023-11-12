@@ -19,7 +19,18 @@ usersRoute.get('', (req, res) => {
 
 	p.connect()
 
-	p.query('SELECT * FROM users')
+	p.query(`SELECT \
+				users_and_groups.id, \
+				users_and_groups.user_id, \ 
+				users_and_groups.group_id, \
+				users.name, \
+				users.surname, \
+				users.father_name, \
+				users.role, \
+				groups.number \
+			FROM users_and_groups \
+			INNER JOIN users ON users.id = users_and_groups.user_id \
+			INNER JOIN groups ON groups.id = users_and_groups.group_id`)
 		.then((result) => {
 			p.end()
 			res.status(200).send(result.rows)
